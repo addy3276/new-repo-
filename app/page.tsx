@@ -1,24 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-
 import TestimonialCard from "./Testimonial/testimonial";
 import Constant from "./constant";
 import Footer from "./Footer";
+import HeroSection from "./HeroSection";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
-  // Calculate animation delays for row-by-row effect
-  const getAnimationDelay = (index) => {
-    const cardsPerRow = 3; // Adjust based on your grid
-    const row = Math.floor(index / cardsPerRow);
-    return row * 1.5; // 1.5 second delay between rows
-  };
-  const containerHeight = 600; // Adjust to your container size
-
-  const duration = 10; // Match TestimonialCard duration
-  const stagger = duration / 2; // Stagger by half duration (5s)
 
   return (
     <div className="page-wrapper overflow-hidden">
@@ -46,6 +35,8 @@ export default function Navbar() {
       </nav>
 
       <main className="main-content relative">
+        <HeroSection />
+
         <section className="testimonials relative z-10">
           <div className="container">
             <h2>Testimonials</h2>
@@ -53,15 +44,15 @@ export default function Navbar() {
           </div>
         </section>
 
-        <div className="testimonial-section relative">
-          <div className="testimonial-grid">
-            {Constant.map((testimonial, index) => (
-              <TestimonialCard
-                key={index}
-                {...testimonial}
-                animationDelay={getAnimationDelay(index)}
-              />
-            ))}
+        <div className="testimonial-section relative px-4 py-8">
+          <div className="md:max-w-7xl md:mx-auto md:bg-gray-50 md:rounded-3xl md:border-2 md:border-gray-200 md:p-8 md:shadow-xl">
+            <div className="md:overflow-y-auto md:max-h-[600px] md:pr-2 md:scrollbar-thin md:scrollbar-thumb-gray-400 md:scrollbar-track-gray-200">
+              <div className="testimonial-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Constant.map((testimonial, index) => (
+                  <TestimonialCard key={index} {...testimonial} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </main>

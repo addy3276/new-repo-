@@ -1,5 +1,4 @@
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import VideoModal from "../VideoModal";
 
 export default function TestimonialCard({
@@ -11,7 +10,6 @@ export default function TestimonialCard({
   link,
   linkType = "google",
   screenshotImage,
-  animationDelay = 0,
 }) {
   const [showVideo, setShowVideo] = useState(false);
 
@@ -36,23 +34,7 @@ export default function TestimonialCard({
 
   return (
     <>
-      <motion.div
-        className="bg-white shadow-lg rounded-2xl p-6 h-fit relative"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{
-          opacity: [0, 1, 1, 0],
-          y: [50, 0, -200, -400],
-        }}
-        transition={{
-          duration: 45,
-          delay: animationDelay,
-          times: [0, 0.1, 0.8, 1],
-          repeat: Infinity,
-          repeatDelay: 2,
-          ease: "linear",
-        }}
-        whileHover={{ scale: 1.05 }}
-      >
+      <div className="bg-white shadow-lg rounded-2xl p-6 h-fit relative">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-4 bg-gray-200 rounded-full"></div>
 
         <h2 className="font-bold text-lg mb-4">{company}</h2>
@@ -94,7 +76,7 @@ export default function TestimonialCard({
             </button>
           )}
         </div>
-      </motion.div>
+      </div>
 
       {showVideo && (
         <VideoModal embedLink={link} onClose={() => setShowVideo(false)} />
