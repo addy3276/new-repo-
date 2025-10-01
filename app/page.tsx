@@ -43,10 +43,9 @@ export default function Navbar() {
             <p>What our customers say about us </p>
           </div>
         </section>
-
         <div className="testimonial-section relative px-4 py-8">
           <div className="md:max-w-7xl md:mx-auto md:bg-gray-50 md:rounded-3xl md:border-2 md:border-gray-200 md:p-8 md:shadow-xl">
-            <div className="md:overflow-y-auto md:max-h-[600px] md:pr-2 md:scrollbar-thin md:scrollbar-thumb-gray-400 md:scrollbar-track-gray-200">
+            <div className="md:overflow-y-auto md:max-h-[800px] md:pr-2 md:scrollbar-thin md:scrollbar-thumb-gray-400 md:scrollbar-track-gray-200">
               <div className="testimonial-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Constant.map((testimonial, index) => (
                   <TestimonialCard key={index} {...testimonial} />

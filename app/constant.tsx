@@ -12,8 +12,7 @@ const Constant = [
   },
   {
     company: "TechCorp",
-    quote:
-      "The team provided an outstanding experience from start to finish. Their attention to detail and dedication to quality exceeded our expectations.",
+    quote: "The team provided an outstanding experience from start to finish .",
     name: "Sarah Johnson",
     role: "Product Manager at TechCorp",
     profileImage: "https://i.pravatar.cc/100?img=6",

@@ -42,9 +42,10 @@
 //     </section>
 //   );
 // }
+
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 interface HeroProps {
   videoSrc?: string;
@@ -62,7 +63,34 @@ export default function HeroSection({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    videoRef.current?.play();
+    const video = videoRef.current;
+    if (!video) return;
+
+    // Force mute and attempt to play
+    video.muted = true;
+    video.playsInline = true;
+
+    const playVideo = async () => {
+      try {
+        await video.play();
+      } catch (error) {
+        console.log("Autoplay failed, waiting for user interaction");
+
+        // Fallback: play on first user interaction
+        const playOnInteraction = () => {
+          video.play();
+          document.removeEventListener("click", playOnInteraction);
+          document.removeEventListener("scroll", playOnInteraction);
+          document.removeEventListener("touchstart", playOnInteraction);
+        };
+
+        document.addEventListener("click", playOnInteraction);
+        document.addEventListener("scroll", playOnInteraction);
+        document.addEventListener("touchstart", playOnInteraction);
+      }
+    };
+
+    playVideo();
   }, []);
 
   return (
@@ -75,10 +103,15 @@ export default function HeroSection({
           loop
           muted
           playsInline
+          preload="auto"
+          webkit-playsinline="true"
+          x5-playsinline="true"
         >
           <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
 
+        {/* Optional overlay content */}
         {showOverlay && (
           <div className="absolute inset-0 z-10 flex items-center justify-center">
             <div className="text-center text-white px-4">
