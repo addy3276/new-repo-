@@ -42,7 +42,6 @@
 //     </section>
 //   );
 // }
-
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -61,36 +60,68 @@ export default function HeroSection({
   showOverlay = true,
 }: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hasInteracted = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Force mute and attempt to play
+    // Ensure all iOS-specific attributes are set
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
     video.muted = true;
-    video.playsInline = true;
+    video.volume = 0;
 
-    const playVideo = async () => {
-      try {
-        await video.play();
-      } catch (error) {
-        console.log("Autoplay failed, waiting for user interaction");
+    const attemptPlay = () => {
+      if (hasInteracted.current) return;
 
-        // Fallback: play on first user interaction
-        const playOnInteraction = () => {
-          video.play();
-          document.removeEventListener("click", playOnInteraction);
-          document.removeEventListener("scroll", playOnInteraction);
-          document.removeEventListener("touchstart", playOnInteraction);
-        };
+      const playPromise = video.play();
 
-        document.addEventListener("click", playOnInteraction);
-        document.addEventListener("scroll", playOnInteraction);
-        document.addEventListener("touchstart", playOnInteraction);
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            console.log("Video autoplay started successfully");
+          })
+          .catch((error) => {
+            console.log("Autoplay failed, will play on interaction");
+            // Add interaction listeners
+            addInteractionListeners();
+          });
       }
     };
 
-    playVideo();
+    const addInteractionListeners = () => {
+      const playVideo = () => {
+        if (!hasInteracted.current) {
+          hasInteracted.current = true;
+          video.play();
+          // Remove listeners after first interaction
+          document.removeEventListener("click", playVideo);
+          document.removeEventListener("touchstart", playVideo);
+          document.removeEventListener("scroll", playVideo);
+        }
+      };
+
+      document.addEventListener("click", playVideo, { once: true });
+      document.addEventListener("touchstart", playVideo, { once: true });
+      document.addEventListener("scroll", playVideo, { once: true });
+    };
+
+    // Wait for video to be ready
+    if (video.readyState >= 3) {
+      attemptPlay();
+    } else {
+      video.addEventListener("loadeddata", attemptPlay, { once: true });
+    }
+
+    // Fallback: try again after a short delay
+    const timeoutId = setTimeout(attemptPlay, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+      video.removeEventListener("loadeddata", attemptPlay);
+    };
   }, []);
 
   return (
@@ -104,14 +135,15 @@ export default function HeroSection({
           muted
           playsInline
           preload="auto"
+          disablePictureInPicture
+          // iOS-specific attributes
           webkit-playsinline="true"
-          x5-playsinline="true"
+          x-webkit-airplay="deny"
         >
           <source src={videoSrc} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
 
-        {/* Optional overlay content */}
         {showOverlay && (
           <div className="absolute inset-0 z-10 flex items-center justify-center">
             <div className="text-center text-white px-4">
