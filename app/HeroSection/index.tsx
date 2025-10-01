@@ -94,9 +94,7 @@ export default function HeroSection({
     <section className="hero-section relative w-full bg-black">
       <div className="relative w-full h-auto md:h-[600px] overflow-hidden">
         {!isLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center z-20">
-            <div className="text-white">Loading...</div>
-          </div>
+          <div className="absolute inset-0 flex items-center justify-center z-20"></div>
         )}
 
         <video
