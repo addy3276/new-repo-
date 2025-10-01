@@ -40,7 +40,7 @@ export default function Navbar() {
         <section className="testimonials relative z-10">
           <div className="container">
             <h2>Testimonials</h2>
-            <p>What our customers say about us sds</p>
+            <p>What our customers say about us </p>
           </div>
         </section>
 
